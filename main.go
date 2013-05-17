@@ -96,7 +96,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		var p Post
 		err = rows.Scan(&p.Id, &p.Title, &p.unixTime)
 		checkErr(err)
-		p.Time = time.Unix(p.unixTime, 0).Format("2006-01-02")
+		p.Time = time.Unix(p.unixTime, 0).UTC().Format("2006-01-02")
+
 		Posts = append(Posts, p)
 	}
 
@@ -133,7 +134,7 @@ func InsertHandler(w http.ResponseWriter, r *http.Request) {
 		p, err = p.Insert()
 		checkErr(err)
 
-		http.Redirect(w, r, "/"+strconv.FormatInt(p.Id, 9), http.StatusFound)
+		http.Redirect(w, r, "/"+strconv.FormatInt(p.Id, 10), http.StatusFound)
 		//fmt.Fprintf(w, p.Origin)
 
 	}
@@ -172,7 +173,7 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 		p, err = p.Update()
 		checkErr(err)
 
-		http.Redirect(w, r, "/"+strconv.FormatInt(p.Id, 9), http.StatusFound)
+		http.Redirect(w, r, "/"+strconv.FormatInt(p.Id, 10), http.StatusFound)
 		//fmt.Fprintf(w, p.Origin)
 
 	}
@@ -208,7 +209,7 @@ func SelectHandler(w http.ResponseWriter, r *http.Request) {
 	data.Id = p.Id
 	data.Title = p.Title
 	data.Category = p.Category
-	data.Time = time.Unix(p.Time, 0).Format("2006-01-02")
+	data.Time = time.Unix(p.Time, 0).UTC().Format("2006-01-02")
 	data.Content = template.HTML(p.Content)
 	data.Origin = p.Origin
 
