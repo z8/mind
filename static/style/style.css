@@ -6,6 +6,15 @@ a {
 	color: #c00;
 }
 
+h1 {
+	font-family: "Palatino", "Hiragino Mincho ProN", serif;
+}
+
+h2,
+h3 {
+	font-weight: bold;
+}
+
 nav {
 	padding: 10px 0;
 	font-size: 12px;
@@ -19,7 +28,6 @@ header h1 {
 	padding: 10px 0;
 	color: #000;
 	font-size: 18px;
-	font-family: CrimsonTextWeb, Georgia, serif;
 }
 
 header ul {
@@ -35,40 +43,38 @@ header ul span {
 
 .main {
 	margin: 0 0 30px;
-	font-family: CrimsonTextWeb, Georgia, serif;
 }
 
 .main small{
 	font-size: 12px;
-	font-family: Lucida,Verdana,Hiragino Sans GB,WenQuanYi Micro Hei,sans-serif;
 }
 
-.main h2 {
-	font-weight: bold;
-	font-size: 18px;
-}
-
+.main h2,
 .main h3 {
-	margin: 10px 0;
 	color: #000;
+	font-size: 14px;
 }
 
+.main h2,
+.main h3,
+.main h4,
+.main p,
+.main ul,
+.main blockquote,
 .main pre {
-	margin: 10px 0;
+	margin: 0 0 10px;
+}
+
+.main ul {
+	list-style: circle;
 }
 
 .main blockquote {
-	margin: 20px 0;
 	border-radius: 5px;
-
-}
-
-.main p{
-	margin: 0 0 10px;
 }
 
 .main hr {
-	margin: 0 0 10px;
+	margin: 20px 0;
 	border: none;
 	border-bottom: 1px dashed #ccc;
 }
@@ -85,10 +91,13 @@ footer {
 }
 
 .item {
-	margin-bottom: 10px;
+	list-style: none;
+	margin-bottom: 20px;
+	line-height: 1.4;
 }
 
 .item a {
+	font-family: "Palatino", "Hiragino Mincho ProN", serif;
 	color: #333;
 }
 
