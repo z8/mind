@@ -101,9 +101,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		Posts = append(Posts, p)
 	}
 
-	t, err := template.ParseFiles("tmpl/index.html")
+	t, err := template.ParseFiles("views/index.html", "views/header.html", "views/footer.html")
 	checkErr(err)
-	t.Execute(w, &Posts)
+	t.ExecuteTemplate(w, "content", &Posts)
 
 }
 
@@ -117,15 +117,13 @@ func InsertHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := template.ParseFiles("tmpl/insert.html")
-	if err != nil {
-		log.Println(err)
-	}
+	t, err := template.ParseFiles("views/insert.html", "views/header.html", "views/footer.html")
+	checkErr(err)
 
 	switch r.Method {
 
 	case "GET":
-		t.Execute(w, nil)
+		t.ExecuteTemplate(w, "content", nil)
 
 	case "POST":
 		p, err := Render(r.FormValue("origin"))
@@ -161,9 +159,9 @@ func UpdateHandler(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 	case "GET":
-		t, err := template.ParseFiles("tmpl/insert.html")
+		t, err := template.ParseFiles("views/insert.html", "views/header.html", "views/footer.html")
 		checkErr(err)
-		t.Execute(w, p)
+		t.ExecuteTemplate(w, "content", nil)
 	case "POST":
 		p, err := Render(r.FormValue("origin"))
 		checkErr(err)
@@ -213,16 +211,15 @@ func SelectHandler(w http.ResponseWriter, r *http.Request) {
 	data.Content = template.HTML(p.Content)
 	data.Origin = p.Origin
 
-	selectTmpl := "tmpl/select.html"
-	t, err := template.ParseFiles(selectTmpl)
+	t, err := template.ParseFiles("views/select.html", "views/header.html", "views/footer.html")
 	checkErr(err)
 
-	t.Execute(w, data)
+	t.ExecuteTemplate(w, "content", data)
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
-	t, err := template.ParseFiles("tmpl/login.html")
+	t, err := template.ParseFiles("views/login.html", "views/header.html", "views/footer.html")
 	checkErr(err)
 
 	switch r.Method {
@@ -230,7 +227,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		session, _ := sess.Get(r, "auth")
 		auth := session.Values["auth"]
 		if auth == nil {
-			t.Execute(w, nil)
+			t.ExecuteTemplate(w, "content", nil)
 		} else {
 			http.Redirect(w, r, "/", http.StatusFound)
 		}
