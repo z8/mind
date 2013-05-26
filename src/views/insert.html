@@ -1,0 +1,10 @@
+{{define "content"}}
+{{template "header"}}
+		<section class="post">
+			<form method="POST">
+				<textarea class="textarea" name="origin">{{.Origin}}</textarea>
+				<input class="button" type="submit" value="Submit" />
+			</form>
+		</section>
+{{template "footer"}}
+{{end}}

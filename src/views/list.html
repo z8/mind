@@ -1,0 +1,29 @@
+{{define "content"}}
+{{template "header"}}
+		<div class="warp">
+			<nav>
+				<a href="/">home</a>
+				<a href="/1">about</a>
+			</nav>
+
+			<header>
+				<h1>ZHANG<strong>LIN</strong></h1>
+			</header>
+
+			<section class="main">
+				<ul class="list">
+					{{range .}}
+						<li class="item">
+							<a href="/{{.Id}}">{{.Title}}</a><br />
+							<small>{{stringTime .Time}}</small>
+						</li>
+					{{end}}
+				</ul>
+			</section>
+
+			<footer>
+				powered by <a title="mind" href="https://github.com/z8/mind">mind</a>
+			</footer>
+		</div>
+{{template "footer"}}
+{{end}}
