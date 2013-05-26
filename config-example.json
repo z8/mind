@@ -1,5 +1,0 @@
-{
-	"dbName": "postgres"
-	, "dbConfig": "user=test password=test dbname=test"
-	, "password": "mind"
-}
