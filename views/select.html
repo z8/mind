@@ -3,7 +3,6 @@
 		<div class="warp">
 			<nav>
 				<a href="/">home</a>
-				<a href="/1">about</a>
 			</nav>
 
 			<header>
@@ -11,7 +10,7 @@
 					{{.Title}}
 				</h1>
 				<ul>
-					<li><span>category</span>{{.Category}}</li>
+					<li><span>category</span><a href="/go/{{.Category}}">{{.Category}}</a></li>
 					<li><span>time</span>{{.Time}}</li>
 				</ul>
 			</header>
@@ -27,7 +26,7 @@
 			</footer>
 		</div>
 
-		<script type="text/javascript" src="/script/jquery-1.9.1.min.js"></script>
-		<script type="text/javascript" src="/script/script.js"></script>
+		<script type="text/javascript" src="/scripts/jquery-1.9.1.min.js"></script>
+		<script type="text/javascript" src="/scripts/script.js"></script>
 {{template "footer"}}
 {{end}}

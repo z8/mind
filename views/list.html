@@ -3,7 +3,6 @@
 		<div class="warp">
 			<nav>
 				<a href="/">home</a>
-				<a href="/1">about</a>
 			</nav>
 
 			<header>
@@ -15,7 +14,7 @@
 					{{range .}}
 						<li class="item">
 							<a href="/{{.Id}}">{{.Title}}</a><br />
-							<small>{{stringTime .Time}}</small>
+							<small>{{tmpTimeFormat .Time}}</small>
 						</li>
 					{{end}}
 				</ul>
