@@ -1,0 +1,5 @@
+{
+	"dbName": "postgres"
+	, "dbConfig": "user=postgres password=postgres dbname=postgres"
+	, "password": "mind"
+}
