@@ -6,12 +6,17 @@
 			</nav>
 
 			<header>
-				<h1>ZHANG<strong>LIN</strong></h1>
+				<h1>
+					ZHANG<strong>LIN</strong>
+					{{if .CategoryName}}
+						: {{ .CategoryName }}
+					{{end}}
+				</h1>
 			</header>
 
 			<section class="main">
 				<ul class="list">
-					{{range .}}
+					{{range .Posts}}
 						<li class="item">
 							<a href="/{{.Id}}">{{.Title}}</a><br />
 							<small>{{tmpTimeFormat .Time}}</small>

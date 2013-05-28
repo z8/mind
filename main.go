@@ -21,9 +21,9 @@ import (
 const CONFIG_NAME = "config.json"
 
 type Config struct {
+	Password string
 	DbName   string
 	DbConfig string
-	Password string
 }
 type Category struct {
 	Id   int
@@ -241,9 +241,16 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	var posts = List("", 1)
 
 	t, err := template.New("").Funcs(template.FuncMap{"tmpTimeFormat": tmpTimeFormat}).ParseFiles("views/list.html", "views/header.html", "views/footer.html")
-
 	checkErr(err)
-	t.ExecuteTemplate(w, "content", &posts)
+
+	var templateData struct {
+		CategoryName string
+		Posts        *[]Post
+	}
+
+	templateData.Posts = posts
+
+	t.ExecuteTemplate(w, "content", &templateData)
 }
 
 func CategoryHandler(w http.ResponseWriter, r *http.Request) {
@@ -259,9 +266,17 @@ func CategoryHandler(w http.ResponseWriter, r *http.Request) {
 	var posts = List(categoryName, p)
 
 	t, err := template.New("").Funcs(template.FuncMap{"tmpTimeFormat": tmpTimeFormat}).ParseFiles("views/list.html", "views/header.html", "views/footer.html")
-
 	checkErr(err)
-	t.ExecuteTemplate(w, "content", &posts)
+
+	var templateData struct {
+		CategoryName string
+		Posts        *[]Post
+	}
+
+	templateData.CategoryName = strings.ToUpper(categoryName)
+	templateData.Posts = posts
+
+	t.ExecuteTemplate(w, "content", &templateData)
 }
 
 func RecentHandler(w http.ResponseWriter, r *http.Request) {
