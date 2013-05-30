@@ -25,6 +25,7 @@ type Config struct {
 	DbName   string
 	DbConfig string
 }
+
 type Category struct {
 	Id   int
 	Name string
@@ -113,7 +114,7 @@ func (post Post) Render(s string) (r Post, err error) {
 	return r, err
 }
 
-func List(categoryName string, pageId int) *[]Post {
+func List(year int, categoryName string, pageId int) *[]Post {
 	posts := []Post{}
 
 	// Connect database
@@ -121,12 +122,28 @@ func List(categoryName string, pageId int) *[]Post {
 	checkErr(err)
 	defer db.Close()
 
-	categorySql := ""
+	categorySQL := ""
 	if categoryName != "" {
-		categorySql += " WHERE category='" + categoryName + "'"
+		categorySQL = " AND category='" + categoryName + "' "
+	} else {
+		categorySQL = " "
 	}
 
-	sql := "SELECT id, title, time FROM post" + categorySql + " ORDER BY time DESC OFFSET " + strconv.Itoa((pageId-1)*10) + " LIMIT 10"
+	dateSQL := ""
+	if year != 0 {
+		dateSQL = " AND TO_CHAR(TO_TIMESTAMP(time), 'YYYY')='" + strconv.Itoa(year) + "' "
+	} else {
+		dateSQL = " "
+	}
+
+	pageSQL := ""
+	if pageId != 0 {
+		pageSQL = " OFFSET " + strconv.Itoa((pageId-1)*10) + " LIMIT 10 "
+	} else {
+		pageSQL = " "
+	}
+
+	sql := "SELECT id, title, time FROM post WHERE 1=1" + categorySQL + dateSQL + "ORDER BY time DESC" + pageSQL
 
 	//rows, err := db.Query("SELECT id, title, time FROM post ORDER BY time DESC OFFSET 0 LIMIT 10")
 	rows, err := db.Query(sql)
@@ -238,14 +255,14 @@ func tmpTimeFormat(unixTime int64) string {
 }
 
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	var posts = List("", 1)
+	var posts = List(0, "", 1)
 
 	t, err := template.New("").Funcs(template.FuncMap{"tmpTimeFormat": tmpTimeFormat}).ParseFiles("views/list.html", "views/header.html", "views/footer.html")
 	checkErr(err)
 
 	var templateData struct {
-		CategoryName string
-		Posts        *[]Post
+		PageName string
+		Posts    *[]Post
 	}
 
 	templateData.Posts = posts
@@ -263,20 +280,42 @@ func CategoryHandler(w http.ResponseWriter, r *http.Request) {
 		p, _ = strconv.Atoi(pageId)
 	}
 
-	var posts = List(categoryName, p)
+	var posts = List(0, categoryName, p)
 
 	t, err := template.New("").Funcs(template.FuncMap{"tmpTimeFormat": tmpTimeFormat}).ParseFiles("views/list.html", "views/header.html", "views/footer.html")
 	checkErr(err)
 
 	var templateData struct {
-		CategoryName string
-		Posts        *[]Post
+		PageName string
+		Posts    *[]Post
 	}
 
-	templateData.CategoryName = strings.ToUpper(categoryName)
+	templateData.PageName = strings.ToUpper(categoryName)
 	templateData.Posts = posts
 
 	t.ExecuteTemplate(w, "content", &templateData)
+}
+
+func DateHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	date := vars["date"]
+
+	d, _ := strconv.Atoi(date)
+	var posts = List(d, "", 0)
+
+	t, err := template.New("").Funcs(template.FuncMap{"tmpTimeFormat": tmpTimeFormat}).ParseFiles("views/list.html", "views/header.html", "views/footer.html")
+	checkErr(err)
+
+	var templateData struct {
+		PageName string
+		Posts    *[]Post
+	}
+
+	templateData.PageName = strings.ToUpper(date)
+	templateData.Posts = posts
+
+	t.ExecuteTemplate(w, "content", &templateData)
+
 }
 
 func RecentHandler(w http.ResponseWriter, r *http.Request) {
@@ -287,7 +326,7 @@ func RecentHandler(w http.ResponseWriter, r *http.Request) {
 		p, _ = strconv.Atoi(pageId)
 	}
 
-	var posts = List("", p)
+	var posts = List(0, "", p)
 
 	t, err := template.New("").Funcs(template.FuncMap{"tmpTimeFormat": tmpTimeFormat}).ParseFiles("views/list.html", "views/header.html", "views/footer.html")
 
@@ -454,6 +493,8 @@ func main() {
 	r.HandleFunc("/{id:[0-9]+}/update", UpdateHandler).Methods("GET", "POST")
 	// Category
 	r.HandleFunc("/go/{categoryName}", CategoryHandler).Methods("GET")
+	// Date
+	r.HandleFunc("/date/{date}", DateHandler).Methods("GET")
 	// Auth
 	r.HandleFunc("/login", LoginHandler).Methods("GET", "POST")
 	// Home
