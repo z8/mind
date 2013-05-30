@@ -1,3 +1,4 @@
+/*
 $("section").eq(0).after($("<div id='disqus_thread'><a href='#'>comments?</a></div>"))
 $("#disqus_thread").click(function(e){
 	e.preventDefault()
@@ -11,3 +12,4 @@ $("#disqus_thread").click(function(e){
 				+ "</script>"
 	$(this).append($(disqus))
 })
+*/
